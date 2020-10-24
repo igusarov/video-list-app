@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AppState } from '../../../app.state';
+import { Store } from '@ngrx/store';
+import { GetData } from '../../actions/get-data.action';
 
 @Component({
   selector: 'app-video-list',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VideoListComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private store: Store<AppState>
+  ) { }
 
   ngOnInit() {
+    this.store.dispatch(new GetData());
   }
 
 }

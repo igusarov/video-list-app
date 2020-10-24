@@ -8,17 +8,22 @@ export interface Author {
   name: string;
 }
 
-export interface Video {
+export interface VideoBasic {
   id: number;
   name: string;
   releaseDate: string;
   catIds: number[];
-  formats: Formats[];
 }
 
-export interface Formats {
+export interface Video extends VideoBasic {
+  authorId: number;
+  formats: Format[];
+}
+
+export interface Format {
   res: string;
   size: number;
 }
+
 
 
