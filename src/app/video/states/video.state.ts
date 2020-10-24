@@ -1,15 +1,9 @@
-import { Author, Category, Video } from '../models';
+import { Video } from '../models';
 
 export interface VideoState  {
-  categories: Category[];
-  authors: Author[];
-  videos: Video[];
+  items: Video[];
 }
 
 export const initialVideoState: VideoState = {
-  categories: [],
-  authors: [],
-  videos: []
+  items: []
 };
-
-
