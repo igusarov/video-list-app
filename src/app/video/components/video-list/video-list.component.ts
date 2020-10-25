@@ -21,16 +21,16 @@ export class VideoListComponent implements OnInit {
     'options'
   ];
 
-  public rows$ = new Observable<TableRow[]>();
-
+  public rows$: Observable<TableRow[]>;
 
   constructor(
     private store: Store<AppState>
-  ) { }
+  ) {
+    this.rows$ = this.store.select(getTableRows);
+  }
 
   ngOnInit() {
     this.store.dispatch(new GetData());
-    this.rows$ = this.store.select(getTableRows);
   }
 
   public handleEditButtonClick(row: TableRow) {
