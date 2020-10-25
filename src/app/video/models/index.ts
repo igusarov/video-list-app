@@ -13,11 +13,11 @@ export interface VideoBasic {
   name: string;
   releaseDate: string;
   catIds: number[];
+  formats: {[key: string]: Format};
 }
 
 export interface Video extends VideoBasic {
   authorId: number;
-  formats: Format[];
 }
 
 export interface Format {

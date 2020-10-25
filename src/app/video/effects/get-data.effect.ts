@@ -20,7 +20,6 @@ const getVideosFromResponse = (response: AuthorsResourceResponse): Video[] => {
     const videos = item.videos.map((video) => ({
       ...video,
       authorId: item.id,
-      formats: Object.values(video.formats)
     }));
     return [
       ...acc,

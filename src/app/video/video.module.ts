@@ -5,6 +5,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { GetDataEffect } from './effects/get-data.effect';
 import { AuthorsService } from './services/author.service';
 import { CategoryService } from './services/category.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -20,6 +22,8 @@ import { CategoryService } from './services/category.service';
     EffectsModule.forFeature([
       GetDataEffect,
     ]),
+    MatTableModule,
+    MatButtonModule
   ],
   providers: [
     AuthorsService,

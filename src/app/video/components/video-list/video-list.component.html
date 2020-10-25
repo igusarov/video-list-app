@@ -1,1 +1,51 @@
-<p>video-list works!</p>
+<table mat-table [dataSource]="rows$ | async" class="mat-elevation-z8">
+  <ng-container matColumnDef="videoName">
+    <th mat-header-cell *matHeaderCellDef> Video name </th>
+    <td mat-cell *matCellDef="let element"> {{element.videoName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="authorName">
+    <th mat-header-cell *matHeaderCellDef> Author </th>
+    <td mat-cell *matCellDef="let element"> {{element.authorName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="categoryName">
+    <th mat-header-cell *matHeaderCellDef> Category name </th>
+    <td mat-cell *matCellDef="let element"> {{element.categoryName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="highestQualityFormat">
+    <th mat-header-cell *matHeaderCellDef> Highest quality format </th>
+    <td mat-cell *matCellDef="let element"> {{element.highestQualityFormat}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="releaseDate">
+    <th mat-header-cell *matHeaderCellDef> Release date </th>
+    <td mat-cell *matCellDef="let element"> {{element.releaseDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="options">
+    <th mat-header-cell *matHeaderCellDef> Options </th>
+    <td mat-cell *matCellDef="let element">
+      <button
+        mat-raised-button
+        color="primary"
+        class="options-button"
+        (click)="handleEditButtonClick(element)"
+      >
+        Edit
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        class="options-button"
+        (click)="handleDeleteButtonClick(element)"
+      >
+        Delete
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
