@@ -29,9 +29,16 @@ const getHighestQualityFormat = (video: Video): string => {
   if (!entries.length) {
     return '';
   }
-  const [ key, val] = entries.sort(([, a], [, b]) => {
-    return (parseResolution(a.res) + a.size) < (parseResolution(b.res) + b.size) ? -1 : 1;
+  const [key, val] = entries.sort(([, a], [, b]) => {
+    const resA = parseResolution(a.res);
+    const resB = parseResolution(b.res);
+    if (resA === resB) {
+      return a.size < b.size ? 1 : -1;
+    } else {
+      return resA < resB ? 1 : -1;
+    }
   })[0];
+
   return `${key} ${val.res}`;
 };
 
