@@ -3,6 +3,7 @@ import { createSelector } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 
 export interface TableRow {
+  id: number;
   videoName: string;
   authorName: string;
   categoryName: string;
@@ -48,6 +49,7 @@ export const getTableRows = createSelector<AppState, Video[], Author[], Category
   (state) => state.category.items,
   (videos, authors, categories) => {
     return videos.map((video) => ({
+      id: video.id,
       videoName: video.name,
       authorName: getAuthorName(authors, video.authorId),
       categoryName: getCategoryName(categories, video.catIds),

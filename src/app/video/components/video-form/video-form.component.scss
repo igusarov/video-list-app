@@ -1,0 +1,11 @@
+.form {
+  padding: 10px;
+
+  & > mat-form-field {
+    display: block;
+  }
+}
+
+.mat-divider {
+  margin: 15px 0;
+}

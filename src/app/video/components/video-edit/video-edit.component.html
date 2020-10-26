@@ -1,0 +1,5 @@
+<app-video-form
+  [video]="video$ | async"
+  (submitForm)="handleSubmit($event)"
+  (onCancel)="handleCancel()"
+></app-video-form>

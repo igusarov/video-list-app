@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { GetData } from '../../actions/get-data.action';
 import { getTableRows, TableRow } from './video-list.selectors';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-video-list',
@@ -24,6 +25,7 @@ export class VideoListComponent implements OnInit {
   public rows$: Observable<TableRow[]>;
 
   constructor(
+    private router: Router,
     private store: Store<AppState>
   ) {
     this.rows$ = this.store.select(getTableRows);
@@ -34,7 +36,7 @@ export class VideoListComponent implements OnInit {
   }
 
   public handleEditButtonClick(row: TableRow) {
-    console.log('edit', row);
+    this.router.navigate(['video-list/', row.id]);
   }
 
   public handleDeleteButtonClick(row: TableRow) {

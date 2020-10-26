@@ -7,12 +7,21 @@ import { AuthorsService } from './services/author.service';
 import { CategoryService } from './services/category.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { VideoEditComponent } from './components/video-edit/video-edit.component';
+import { VideoAddComponent } from './components/video-add/video-add.component';
+import { VideoFormComponent } from './components/video-form/video-form.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
 @NgModule({
   declarations: [
-    VideoListComponent
+    VideoListComponent,
+    VideoEditComponent,
+    VideoAddComponent,
+    VideoFormComponent
   ],
   exports: [
     VideoListComponent
@@ -23,7 +32,14 @@ import { MatButtonModule } from '@angular/material/button';
       GetDataEffect,
     ]),
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+    MatSelectModule,
+    MatDividerModule
   ],
   providers: [
     AuthorsService,

@@ -1,0 +1,35 @@
+<form class="form" [formGroup]="videoForm" (ngSubmit)="handleSubmit()">
+  <mat-form-field
+    appearance="legacy">
+    <mat-label>Video name</mat-label>
+    <input formControlName="name" matInput>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Video author</mat-label>
+    <mat-select formControlName="authorId">
+      <mat-option *ngFor="let author of (authors$ | async)" [value]="author.id">
+        {{author.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <label formArrayName="categories" *ngFor="let category of categoryFormsArray.controls; let i = index">
+    <input type="checkbox" [formControlName]="i">
+    {{categories[i].name}}
+  </label>
+  <mat-divider></mat-divider>
+  <button
+    type="submit"
+    mat-raised-button
+    color="primary"
+    [disabled]="!videoForm.valid"
+  >
+    {{video ? 'Save' : 'Create'}}
+  </button>
+  <button
+    (click)="handleCancelClick($event)"
+    mat-raised-button
+    >
+    Cancel
+  </button>
+</form>
+
