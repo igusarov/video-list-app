@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Author, Category, Video } from '../../models';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-video-form',
@@ -13,13 +13,14 @@ import { filter, take, takeUntil } from 'rxjs/operators';
 })
 export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output() submitForm: EventEmitter<Video> = new EventEmitter<Video>();
-  @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
+  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
   @Input() public video: Video;
   public videoForm: FormGroup;
   public authors$: Observable<Author[]>;
   public categories$: Observable<Category[]>;
   public categories: Category[] = [];
   public categoryFormControls: FormControl[] = [];
+  private video$: Subject<Video> = new Subject<Video>();
   private unsubscribe$: Subject<void> = new Subject();
   constructor(
     private store: Store<AppState>,
@@ -28,15 +29,20 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
     this.authors$ = this.store.select((state) => state.author.items);
     this.categories$ = this.store.select((state) => state.category.items);
   }
+
   ngOnInit() {
-    this.videoForm = this.formBuilder.group(this.controlsConfig);
-    this.categories$.pipe(
-      filter((categories) => categories.length > 0),
-      take(1),
+    this.initVideoForm();
+    combineLatest(this.categories$, this.video$).pipe(
+      filter(([categories]) => categories.length > 0),
       takeUntil(this.unsubscribe$),
-    ).subscribe((categories) => {
+    ).subscribe(([categories]) => {
       this.categories = categories;
+      this.initVideoForm();
     });
+  }
+
+  private initVideoForm() {
+    this.videoForm = this.formBuilder.group(this.controlsConfig);
   }
 
   public handleSubmit() {
@@ -47,7 +53,7 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public handleCancelClick($event) {
     $event.preventDefault();
-    this.onCancel.emit();
+    this.cancel.emit();
   }
 
   private prepareDataToSubmit(): Video {
@@ -70,32 +76,24 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   private get categoryFormsArray() {
     return this.videoForm.controls.categories as FormArray;
   }
-  private get controlsConfig(): any {
-    this.categoryFormControls = this.categories.map((category) => {
-      return new FormControl(
-        this.video.catIds.includes(category.id)
-      );
-    });
 
+  private get controlsConfig(): any {
     if (this.video) {
-      return {
-        name: [this.video.name, Validators.required],
-        authorId: [this.video.authorId],
-        categories: new FormArray(this.categoryFormControls),
-      };
-    } else {
-      return {
-        name: ['', Validators.required],
-        authorId: [null],
-        categories: new FormArray([]),
-      };
+      this.categoryFormControls = this.categories.map((category) => {
+        return new FormControl(
+          this.video.catIds.includes(category.id)
+        );
+      });
     }
+    return {
+      name: [this.video ? this.video.name : '', Validators.required],
+      authorId: [this.video ? this.video.authorId : null],
+      categories: new FormArray(this.video ? this.categoryFormControls : []),
+    };
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.video.currentValue) {
-      this.videoForm = this.formBuilder.group(this.controlsConfig);
-    }
+    this.video$.next(changes.video.currentValue);
   }
 
   ngOnDestroy(): void {
