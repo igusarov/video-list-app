@@ -54,4 +54,25 @@ export class VideoEffect {
       }
     })
   );
+
+  @Effect() public addVideo = this.actions.pipe(
+    ofType<videoActions.AddVideo>(videoActions.ADD_VIDEO),
+    withLatestFrom(this.store.select((state) => state.video.items)),
+    switchMap(([action, videos]) => {
+      const maxId = videos.reduce((acc, video) => Math.max(acc, video.id), 0);
+      const newVideo = {
+        ...action.payload,
+        id: maxId + 1,
+        formats: {
+          one: { res: '1080p', size: 1000 }
+        }
+      };
+      const videosToSave = videos
+        .filter((video) => video.authorId === newVideo.authorId)
+        .concat(newVideo)
+        .map(omit('authorId')) as VideoBasic[];
+      return this.authorsService.patchAuthorVideos(newVideo.authorId, videosToSave);
+    }),
+    mapTo(new videoActions.AddVideoSuccess())
+  );
 }

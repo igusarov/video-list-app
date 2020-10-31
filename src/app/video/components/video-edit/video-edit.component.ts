@@ -36,6 +36,6 @@ export class VideoEditComponent {
   }
 
   public handleCancel() {
-    this.router.navigate(['video-list/']);
+    this.router.navigate(['video/list']);
   }
 }

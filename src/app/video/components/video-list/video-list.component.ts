@@ -36,11 +36,15 @@ export class VideoListComponent implements OnInit {
   }
 
   public handleEditButtonClick(row: TableRow) {
-    this.router.navigate(['video-list/', row.id]);
+    this.router.navigate(['video', row.id, 'edit']);
   }
 
   public handleDeleteButtonClick(row: TableRow) {
     console.log('delete', row);
+  }
+
+  public handleAddVideo() {
+    this.router.navigate(['video/add']);
   }
 
 }

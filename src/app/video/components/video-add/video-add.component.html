@@ -1,1 +1,5 @@
-<p>video-add works!</p>
+<app-video-form
+  (submitForm)="handleSubmit($event)"
+  (cancel)="handleCancel()"
+  [isLoading]="isSubmitting$ | async"
+></app-video-form>

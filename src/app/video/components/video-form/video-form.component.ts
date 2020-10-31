@@ -20,7 +20,6 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   public authors$: Observable<Author[]>;
   public categories$: Observable<Category[]>;
   public categories: Category[] = [];
-  public categoryFormControls: FormControl[] = [];
   private video$: Subject<Video> = new Subject<Video>();
   private unsubscribe$: Subject<void> = new Subject();
   constructor(
@@ -40,6 +39,7 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
       this.categories = categories;
       this.initVideoForm();
     });
+    this.video$.next(null);
   }
 
   public handleSubmit() {
@@ -63,7 +63,7 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
 
   private prepareDataToSubmit(): Video {
     const { name, authorId } = this.videoForm.value;
-    const { id, formats, releaseDate } = this.video;
+    const { id, formats, releaseDate } = this.video || { id: null, formats: null, releaseDate: null};
     const catIds = this.videoForm.value.categories.map(
       (checked, i) => checked ? this.categories[i].id : null
     ).filter(Boolean);
@@ -83,18 +83,19 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private get controlsConfig(): any {
-    if (this.video) {
-      this.categoryFormControls = this.categories.map((category) => {
-        return new FormControl(
-          this.video.catIds.includes(category.id)
-        );
-      });
-    }
     return {
       name: [this.video ? this.video.name : '', Validators.required],
-      authorId: [this.video ? this.video.authorId : null],
-      categories: new FormArray(this.video ? this.categoryFormControls : []),
+      authorId: [this.video ? this.video.authorId : null, Validators.required],
+      categories: new FormArray(this.categoryFormControls),
     };
+  }
+
+  private get categoryFormControls(): FormControl[] {
+    return this.categories.map((category) => {
+      return new FormControl(
+        this.video ? this.video.catIds.includes(category.id) : false,
+      );
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

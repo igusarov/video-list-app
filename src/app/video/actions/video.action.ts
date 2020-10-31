@@ -6,8 +6,8 @@ export const EDIT_VIDEO = 'VIDEO/EDIT_VIDEO';
 export const EDIT_VIDEO_SUCCESS = 'VIDEO/EDIT_VIDEO_SUCCESS';
 export const EDIT_VIDEO_ERROR = 'VIDEO/EDIT_VIDEO_ERROR';
 export const ADD_VIDEO = 'VIDEO/ADD_VIDEO';
-export const ADD_VIDEO_SUCCESS = 'VIDEO/EDIT_VIDEO_SUCCESS';
-export const ADD_VIDEO_ERROR = 'VIDEO/EDIT_VIDEO_ERROR';
+export const ADD_VIDEO_SUCCESS = 'VIDEO/ADD_VIDEO_SUCCESS';
+export const ADD_VIDEO_ERROR = 'VIDEO/ADD_VIDEO_ERROR';
 
 export class GetVideosSuccess implements Action {
   public readonly type = GET_VIDEOS_SUCCESS;
