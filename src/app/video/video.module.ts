@@ -13,6 +13,7 @@ import { VideoFormComponent } from './components/video-form/video-form.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { VideoEffect } from './effects/video.effect';
 
 
 
@@ -30,6 +31,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     EffectsModule.forFeature([
       GetDataEffect,
+      VideoEffect,
     ]),
     MatTableModule,
     MatButtonModule,
