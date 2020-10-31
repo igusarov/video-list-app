@@ -2,4 +2,5 @@
   [video]="video$ | async"
   (submitForm)="handleSubmit($event)"
   (cancel)="handleCancel()"
+  [isLoading]="isSubmitting$ | async"
 ></app-video-form>

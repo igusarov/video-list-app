@@ -4,7 +4,7 @@ import { AppState } from '../../app.state';
 import { AuthorsService } from '../services/author.service';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import * as videoActions from '../actions/video.action';
-import { tap, withLatestFrom } from 'rxjs/operators';
+import { mapTo, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { omit } from 'lodash/fp';
 import { VideoBasic } from '../models';
 
@@ -16,12 +16,10 @@ export class VideoEffect {
     private actions: Actions,
   ) {}
 
-  @Effect({
-    dispatch: false
-  }) public editVideo = this.actions.pipe(
+  @Effect() public editVideo = this.actions.pipe(
     ofType<videoActions.EditVideo>(videoActions.EDIT_VIDEO),
     withLatestFrom(this.store.select((state) => state.video.items)),
-    tap(([action, videos]) => {
+    switchMap(([action, videos]) => {
       const editedVideo = action.payload;
       const originalVideo = videos.find((video) => video.id === editedVideo.id);
       if (originalVideo.authorId !== editedVideo.authorId) {
@@ -34,11 +32,13 @@ export class VideoEffect {
           .filter((video) => video.authorId === editedVideo.authorId)
           .concat(editedVideo)
           .map(omit('authorId')) as VideoBasic[];
-        this.authorsService
-          .patchAuthorVideos(originalVideo.authorId, prevAuthorVideosToSave)
-          .subscribe(() => {
-            this.authorsService.patchAuthorVideos(editedVideo.authorId, newAuthorVideosToSave).subscribe();
-          });
+        return this.authorsService.patchAuthorVideos(originalVideo.authorId, prevAuthorVideosToSave).pipe(
+          switchMap(() => {
+            return this.authorsService.patchAuthorVideos(editedVideo.authorId, newAuthorVideosToSave).pipe(
+              mapTo(new videoActions.EditVideoSuccess()),
+            );
+          } )
+        );
       } else {
         const videosToSave = videos
           .filter((video) => video.authorId === editedVideo.authorId)
@@ -48,7 +48,9 @@ export class VideoEffect {
           }
           return video;
         });
-        this.authorsService.patchAuthorVideos(editedVideo.authorId, videosToSave).subscribe();
+        return this.authorsService.patchAuthorVideos(editedVideo.authorId, videosToSave).pipe(
+          mapTo(new videoActions.EditVideoSuccess())
+        );
       }
     })
   );

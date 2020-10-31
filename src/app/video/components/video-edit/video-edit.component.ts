@@ -16,6 +16,7 @@ import { EditVideo } from '../../actions/video.action';
 export class VideoEditComponent {
 
   public video$: Observable<Video>;
+  public isSubmitting$: Observable<boolean>;
   constructor(
     private store: Store<AppState>,
     private route: ActivatedRoute,
@@ -25,6 +26,9 @@ export class VideoEditComponent {
     this.video$ = this.store.select(getVideoById(
       parseInt(this.route.snapshot.params.id, 10)
     ));
+    this.isSubmitting$ = this.store.select(
+      (state) => state.video.isSubmitting,
+    );
   }
 
   public handleSubmit(video: Video) {

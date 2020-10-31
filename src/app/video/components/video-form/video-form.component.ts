@@ -14,6 +14,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output() submitForm: EventEmitter<Video> = new EventEmitter<Video>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
+  @Input() isLoading: boolean;
   @Input() public video: Video;
   public videoForm: FormGroup;
   public authors$: Observable<Author[]>;
@@ -41,10 +42,6 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  private initVideoForm() {
-    this.videoForm = this.formBuilder.group(this.controlsConfig);
-  }
-
   public handleSubmit() {
     this.submitForm.emit(
       this.prepareDataToSubmit()
@@ -54,6 +51,14 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   public handleCancelClick($event) {
     $event.preventDefault();
     this.cancel.emit();
+  }
+
+  public get isButtonDisabled() {
+    return !this.videoForm.valid || this.isLoading;
+  }
+
+  private initVideoForm() {
+    this.videoForm = this.formBuilder.group(this.controlsConfig);
   }
 
   private prepareDataToSubmit(): Video {
@@ -93,7 +98,9 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.video$.next(changes.video.currentValue);
+    if (changes.video) {
+      this.video$.next(changes.video.currentValue);
+    }
   }
 
   ngOnDestroy(): void {
