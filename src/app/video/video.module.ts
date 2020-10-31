@@ -11,9 +11,10 @@ import { VideoEditComponent } from './components/video-edit/video-edit.component
 import { VideoAddComponent } from './components/video-add/video-add.component';
 import { VideoFormComponent } from './components/video-form/video-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDividerModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatDialogModule, MatDividerModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VideoEffect } from './effects/video.effect';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 
 
@@ -22,7 +23,8 @@ import { VideoEffect } from './effects/video.effect';
     VideoListComponent,
     VideoEditComponent,
     VideoAddComponent,
-    VideoFormComponent
+    VideoFormComponent,
+    ConfirmDialogComponent
   ],
   exports: [
     VideoListComponent
@@ -41,11 +43,15 @@ import { VideoEffect } from './effects/video.effect';
     MatInputModule,
     BrowserAnimationsModule,
     MatSelectModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule,
   ],
   providers: [
     AuthorsService,
     CategoryService
+  ],
+  entryComponents: [
+    ConfirmDialogComponent,
   ]
 })
 export class VideoModule { }

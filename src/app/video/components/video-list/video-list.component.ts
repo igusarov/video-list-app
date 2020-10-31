@@ -5,6 +5,9 @@ import { GetData } from '../../actions/get-data.action';
 import { getTableRows, TableRow } from './video-list.selectors';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { DeleteVideo } from '../../actions/video.action';
 
 @Component({
   selector: 'app-video-list',
@@ -26,7 +29,8 @@ export class VideoListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    public dialog: MatDialog,
   ) {
     this.rows$ = this.store.select(getTableRows);
   }
@@ -40,7 +44,12 @@ export class VideoListComponent implements OnInit {
   }
 
   public handleDeleteButtonClick(row: TableRow) {
-    console.log('delete', row);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe((deletionIsConfirmed) => {
+      if (deletionIsConfirmed) {
+        this.store.dispatch(new DeleteVideo({videoId: row.id}));
+      }
+    });
   }
 
   public handleAddVideo() {

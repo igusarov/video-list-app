@@ -4,7 +4,8 @@ import { AppState } from '../../app.state';
 import { AuthorsService } from '../services/author.service';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import * as videoActions from '../actions/video.action';
-import { mapTo, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import * as getDataActions from '../actions/get-data.action';
+import { mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
 import { omit } from 'lodash/fp';
 import { VideoBasic } from '../models';
 
@@ -74,5 +75,19 @@ export class VideoEffect {
       return this.authorsService.patchAuthorVideos(newVideo.authorId, videosToSave);
     }),
     mapTo(new videoActions.AddVideoSuccess())
+  );
+
+  @Effect() public deleteVideo = this.actions.pipe(
+    ofType<videoActions.DeleteVideo>(videoActions.DELETE_VIDEO),
+    withLatestFrom(this.store.select((state) => state.video.items)),
+    switchMap(([action, videos]) => {
+      const videoToRemove = videos.find((video) => video.id === action.payload.videoId);
+      const videosToSave = videos.filter((video) => {
+        return video.authorId === videoToRemove.authorId &&
+          video.id !== videoToRemove.id;
+      });
+      return this.authorsService.patchAuthorVideos(videoToRemove.authorId, videosToSave);
+    }),
+    mapTo(new getDataActions.GetData()),
   );
 }

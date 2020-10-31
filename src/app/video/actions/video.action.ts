@@ -8,6 +8,7 @@ export const EDIT_VIDEO_ERROR = 'VIDEO/EDIT_VIDEO_ERROR';
 export const ADD_VIDEO = 'VIDEO/ADD_VIDEO';
 export const ADD_VIDEO_SUCCESS = 'VIDEO/ADD_VIDEO_SUCCESS';
 export const ADD_VIDEO_ERROR = 'VIDEO/ADD_VIDEO_ERROR';
+export const DELETE_VIDEO = 'VIDEO/DELETE_VIDEO';
 
 export class GetVideosSuccess implements Action {
   public readonly type = GET_VIDEOS_SUCCESS;
@@ -40,6 +41,13 @@ export class AddVideoError implements Action {
   public readonly type = ADD_VIDEO_ERROR;
 }
 
+export class DeleteVideo implements Action {
+  public readonly type = DELETE_VIDEO;
+  constructor(public payload: {
+    videoId: number
+  }) {}
+}
+
 
 export type Actions = GetVideosSuccess |
   EditVideo |
@@ -47,4 +55,5 @@ export type Actions = GetVideosSuccess |
   EditVideoError |
   AddVideo |
   AddVideoSuccess|
-  AddVideoError;
+  AddVideoError |
+  DeleteVideo;
