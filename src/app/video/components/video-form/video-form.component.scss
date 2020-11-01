@@ -1,6 +1,4 @@
 .form {
-  padding: 10px;
-
   & > mat-form-field {
     display: block;
   }
@@ -28,4 +26,10 @@
   border: 2px solid #ffffff;
   border-top-color: #000000;
   animation: spinner .8s linear infinite;
+}
+
+.button {
+  &--cancel {
+    margin-left: 10px;
+  }
 }

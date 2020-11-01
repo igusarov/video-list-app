@@ -44,8 +44,8 @@ export class VideoListComponent implements OnInit,  AfterViewInit {
         if (!text) {
           return rows;
         }
-        return rows.filter(({videoName, authorName, highestQualityFormat, releaseDate}) => {
-          return (videoName + authorName + highestQualityFormat + releaseDate)
+        return rows.filter(({videoName, authorName, categoryName, highestQualityFormat, releaseDate}) => {
+          return (videoName + authorName + categoryName + highestQualityFormat + releaseDate)
             .toLowerCase().includes(text);
         });
       }),
@@ -72,9 +72,4 @@ export class VideoListComponent implements OnInit,  AfterViewInit {
       }
     });
   }
-
-  public handleAddVideo() {
-    this.router.navigate(['video/add']);
-  }
-
 }

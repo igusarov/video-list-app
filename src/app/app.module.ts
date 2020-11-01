@@ -8,10 +8,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { metaReducers, reducers } from './app.reducers';
 import { VideoModule } from './video/video.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ContainerComponent } from './components/container/container.component';
+import { MatButtonModule } from '@angular/material';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ContainerComponent,
   ],
   imports: [
     BrowserModule,
@@ -19,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([]),
     VideoModule,
-    HttpClientModule
+    HttpClientModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

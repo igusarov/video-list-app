@@ -3,14 +3,6 @@
   <mat-label>Search</mat-label>
   <input [formControl]="searchInput" matInput>
 </mat-form-field>
-<button
-  mat-raised-button
-  color="accent"
-  class="options-button"
-  (click)="handleAddVideo()"
->
-  Add video
-</button>
 <table mat-table [dataSource]="rows$ | async" class="mat-elevation-z8">
   <ng-container matColumnDef="videoName">
     <th mat-header-cell *matHeaderCellDef> Video name </th>
