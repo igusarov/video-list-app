@@ -1,0 +1,20 @@
+<div class="page">
+  <div class="page__container container">
+    <div class="container__header">
+      Video
+      <button
+        *ngIf="isAddButtonShown$ | async"
+        mat-raised-button
+        color="accent"
+        class="options-button"
+        (click)="handleAddVideo()"
+      >
+        Add video
+      </button>
+    </div>
+    <div class="container__content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
+
