@@ -23,29 +23,6 @@
       "name": "David Munch",
       "videos": [
         {
-          "id": 1,
-          "catIds": [
-            1,
-            2
-          ],
-          "name": "Set the Moon",
-          "formats": {
-            "one": {
-              "res": "1080p",
-              "size": 1000
-            },
-            "two": {
-              "res": "720p",
-              "size": 2000
-            },
-            "three": {
-              "res": "720p",
-              "size": 900
-            }
-          },
-          "releaseDate": "2018-08-09"
-        },
-        {
           "id": 2,
           "catIds": [
             2,
@@ -129,19 +106,32 @@
             }
           },
           "releaseDate": "2018-08-10"
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Steven Scorsese",
-      "videos": [
+        },
+        {
+          "id": 1,
+          "name": "Set the Moon",
+          "formats": {
+            "one": {
+              "res": "1080p",
+              "size": 1000
+            },
+            "two": {
+              "res": "720p",
+              "size": 2000
+            },
+            "three": {
+              "res": "720p",
+              "size": 900
+            }
+          },
+          "releaseDate": "2018-08-09",
+          "catIds": [
+            1,
+            2
+          ]
+        },
         {
           "id": 6,
-          "catIds": [
-            2,
-            4
-          ],
           "name": "Torrance",
           "formats": {
             "one": {
@@ -149,9 +139,19 @@
               "size": 4500
             }
           },
-          "releaseDate": "2018-08-10"
+          "releaseDate": "2018-08-10",
+          "catIds": [
+            1,
+            2,
+            4
+          ]
         }
       ]
+    },
+    {
+      "id": 3,
+      "name": "Steven Scorsese",
+      "videos": []
     }
   ]
 }

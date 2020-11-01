@@ -52,7 +52,10 @@ export class VideoEffect {
           } )
         );
     }),
-    mapTo(new videoActions.EditVideoSuccess()),
+    switchMap(() => [
+      new videoActions.EditVideoSuccess(),
+      new getDataActions.GetData(),
+    ]),
   );
 
   @Effect() public editVideoAuthorNotChanged = this.actions.pipe(
