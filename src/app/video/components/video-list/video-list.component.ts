@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterContentChecked, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { GetData } from '../../actions/get-data.action';
@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DeleteVideo } from '../../actions/video.action';
 import { FormControl } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-video-list',
@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./video-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoListComponent implements OnInit,  AfterViewInit {
+export class VideoListComponent {
   public searchInput: FormControl = new FormControl('');
 
   public displayedColumns: string[] = [
@@ -38,7 +38,9 @@ export class VideoListComponent implements OnInit,  AfterViewInit {
   ) {
     this.rows$ = combineLatest(
       this.store.select(getTableRows),
-      this.searchInput.valueChanges
+      this.searchInput.valueChanges.pipe(
+        startWith(''),
+      )
     ).pipe(
       map(([rows, searchQuery]: [TableRow[], string]) => {
         const text = searchQuery.trim().toLowerCase();
@@ -51,14 +53,7 @@ export class VideoListComponent implements OnInit,  AfterViewInit {
         });
       }),
     );
-  }
-
-  ngOnInit() {
     this.store.dispatch(new GetData());
-  }
-
-  ngAfterViewInit(): void {
-    this.searchInput.setValue('');
   }
 
   public handleEditButtonClick(row: TableRow) {
