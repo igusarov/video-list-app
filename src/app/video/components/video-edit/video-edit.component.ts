@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Video } from '../../models';
+import { Author, Video } from '../../models';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GetData } from '../../actions/get-data.action';
 import { EditVideo } from '../../actions/video.action';
-import { getVideoById } from '../../selectors';
+import { getAuthors, getVideoById } from '../../selectors';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-video-edit',
@@ -23,7 +24,9 @@ export class VideoEditComponent {
     private route: ActivatedRoute,
     private router: Router,
   ) {
-    this.store.dispatch(new GetData());
+    if (this.isFetchDataNeeded) {
+      this.store.dispatch(new GetData());
+    }
     this.video$ = this.store.select(getVideoById(
       parseInt(this.route.snapshot.params.id, 10)
     ));
@@ -38,5 +41,15 @@ export class VideoEditComponent {
 
   public handleCancel() {
     this.router.navigate(['video/list']);
+  }
+
+  private get isFetchDataNeeded(): boolean {
+    let isNeeded = false;
+    this.store.select(getAuthors).pipe(
+      take(1)
+    ).subscribe((authors: Author[]) => {
+      isNeeded = authors.length === 0;
+    });
+    return isNeeded;
   }
 }

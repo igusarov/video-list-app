@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Video } from '../../models';
+import { Author, Video } from '../../models';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GetData } from '../../actions/get-data.action';
 import { AddVideo } from '../../actions/video.action';
 import { filter, take } from 'rxjs/operators';
+import { getAuthors } from '../../selectors';
 
 @Component({
   selector: 'app-video-add',
@@ -21,7 +22,9 @@ export class VideoAddComponent {
     private route: ActivatedRoute,
     private router: Router,
   ) {
-    this.store.dispatch(new GetData());
+    if (this.isFetchDataNeeded) {
+      this.store.dispatch(new GetData());
+    }
     this.isSubmitting$ = this.store.select(
       (state) => state.video.isSubmitting,
     );
@@ -44,4 +47,15 @@ export class VideoAddComponent {
   private goToVideoList() {
     this.router.navigate(['video/list']);
   }
+
+  private get isFetchDataNeeded(): boolean {
+    let isNeeded = false;
+    this.store.select(getAuthors).pipe(
+      take(1)
+    ).subscribe((authors: Author[]) => {
+      isNeeded = authors.length === 0;
+    });
+    return isNeeded;
+  }
+
 }
