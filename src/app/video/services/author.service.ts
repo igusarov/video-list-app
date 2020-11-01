@@ -15,7 +15,7 @@ export class AuthorsService {
     return this.http.get<AuthorsResourceResponse>(authorsResourceEndpoint);
   }
 
-  patchAuthorVideos(authorId, payload: VideoBasic[]): Observable<void> {
-    return this.http.patch<void>(`${authorsResourceEndpoint}/${authorId}`, {videos: payload});
+  patchAuthor(authorId, data: {videos: VideoBasic[]}): Observable<void> {
+    return this.http.patch<void>(`${authorsResourceEndpoint}/${authorId}`, data);
   }
 }

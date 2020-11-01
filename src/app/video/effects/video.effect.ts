@@ -5,10 +5,16 @@ import { AuthorsService } from '../services/author.service';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import * as videoActions from '../actions/video.action';
 import * as getDataActions from '../actions/get-data.action';
-import { mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
 import { omit } from 'lodash/fp';
-import { VideoBasic } from '../models';
+import { Video, VideoBasic } from '../models';
 import { getVideos } from '../selectors';
+
+const editVideoAuthorHasChanged = ([action, videos]: [videoActions.EditVideo, Video[]]) => {
+  const editedVideo = action.payload;
+  const originalVideo = videos.find((video) => video.id === editedVideo.id);
+  return editedVideo.authorId !== originalVideo.authorId;
+};
 
 @Injectable()
 export class VideoEffect {
@@ -18,43 +24,50 @@ export class VideoEffect {
     private actions: Actions,
   ) {}
 
-  @Effect() public editVideo = this.actions.pipe(
+  @Effect() public editVideoAuthorChanged = this.actions.pipe(
     ofType<videoActions.EditVideo>(videoActions.EDIT_VIDEO),
     withLatestFrom(this.store.select(getVideos)),
+    filter(editVideoAuthorHasChanged),
     switchMap(([action, videos]) => {
       const editedVideo = action.payload;
       const originalVideo = videos.find((video) => video.id === editedVideo.id);
-      if (originalVideo.authorId !== editedVideo.authorId) {
-        const prevAuthorVideosToSave = videos
+      const prevAuthorVideosToSave = videos
           .filter((video) => {
             return video.authorId === originalVideo.authorId &&
               video.id !== editedVideo.id;
           }).map(omit('authorId')) as VideoBasic[];
-        const newAuthorVideosToSave = videos
+      const newAuthorVideosToSave = videos
           .filter((video) => video.authorId === editedVideo.authorId)
           .concat(editedVideo)
           .map(omit('authorId')) as VideoBasic[];
-        return this.authorsService.patchAuthorVideos(originalVideo.authorId, prevAuthorVideosToSave).pipe(
+      return this.authorsService.patchAuthor(
+        originalVideo.authorId,
+        {videos: prevAuthorVideosToSave}
+        ).pipe(
           switchMap(() => {
-            return this.authorsService.patchAuthorVideos(editedVideo.authorId, newAuthorVideosToSave).pipe(
-              mapTo(new videoActions.EditVideoSuccess()),
-            );
+            return this.authorsService.patchAuthor(
+              editedVideo.authorId,
+              {videos: newAuthorVideosToSave}
+              );
           } )
         );
-      } else {
-        const videosToSave = videos
-          .filter((video) => video.authorId === editedVideo.authorId)
-          .map((video) => {
-          if (video.id === editedVideo.id) {
-           return omit('authorId')(editedVideo);
-          }
-          return video;
-        });
-        return this.authorsService.patchAuthorVideos(editedVideo.authorId, videosToSave).pipe(
-          mapTo(new videoActions.EditVideoSuccess())
-        );
-      }
-    })
+    }),
+    mapTo(new videoActions.EditVideoSuccess()),
+  );
+
+  @Effect() public editVideoAuthorNotChanged = this.actions.pipe(
+    ofType<videoActions.EditVideo>(videoActions.EDIT_VIDEO),
+    withLatestFrom(this.store.select(getVideos)),
+    filter((data) => !editVideoAuthorHasChanged(data)),
+    switchMap(([action, videos]) => {
+      const editedVideo = action.payload;
+      const videosToSave = videos
+        .filter((video) => video.authorId === editedVideo.authorId)
+        .map((video) => video.id === editedVideo.id ? editedVideo : video)
+        .map(omit('authorId')) as VideoBasic[];
+      return this.authorsService.patchAuthor(editedVideo.authorId, {videos: videosToSave});
+    }),
+    mapTo(new videoActions.EditVideoSuccess())
   );
 
   @Effect() public addVideo = this.actions.pipe(
@@ -73,7 +86,7 @@ export class VideoEffect {
         .filter((video) => video.authorId === newVideo.authorId)
         .concat(newVideo)
         .map(omit('authorId')) as VideoBasic[];
-      return this.authorsService.patchAuthorVideos(newVideo.authorId, videosToSave);
+      return this.authorsService.patchAuthor(newVideo.authorId, {videos: videosToSave});
     }),
     mapTo(new videoActions.AddVideoSuccess())
   );
@@ -87,7 +100,7 @@ export class VideoEffect {
         return video.authorId === videoToRemove.authorId &&
           video.id !== videoToRemove.id;
       });
-      return this.authorsService.patchAuthorVideos(videoToRemove.authorId, videosToSave);
+      return this.authorsService.patchAuthor(videoToRemove.authorId, {videos: videosToSave});
     }),
     mapTo(new getDataActions.GetData()),
   );
