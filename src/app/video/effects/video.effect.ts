@@ -8,6 +8,7 @@ import * as getDataActions from '../actions/get-data.action';
 import { mapTo, switchMap, withLatestFrom } from 'rxjs/operators';
 import { omit } from 'lodash/fp';
 import { VideoBasic } from '../models';
+import { getVideos } from '../selectors';
 
 @Injectable()
 export class VideoEffect {
@@ -19,7 +20,7 @@ export class VideoEffect {
 
   @Effect() public editVideo = this.actions.pipe(
     ofType<videoActions.EditVideo>(videoActions.EDIT_VIDEO),
-    withLatestFrom(this.store.select((state) => state.video.items)),
+    withLatestFrom(this.store.select(getVideos)),
     switchMap(([action, videos]) => {
       const editedVideo = action.payload;
       const originalVideo = videos.find((video) => video.id === editedVideo.id);
@@ -58,7 +59,7 @@ export class VideoEffect {
 
   @Effect() public addVideo = this.actions.pipe(
     ofType<videoActions.AddVideo>(videoActions.ADD_VIDEO),
-    withLatestFrom(this.store.select((state) => state.video.items)),
+    withLatestFrom(this.store.select(getVideos)),
     switchMap(([action, videos]) => {
       const maxId = videos.reduce((acc, video) => Math.max(acc, video.id), 0);
       const newVideo = {
@@ -79,7 +80,7 @@ export class VideoEffect {
 
   @Effect() public deleteVideo = this.actions.pipe(
     ofType<videoActions.DeleteVideo>(videoActions.DELETE_VIDEO),
-    withLatestFrom(this.store.select((state) => state.video.items)),
+    withLatestFrom(this.store.select(getVideos)),
     switchMap(([action, videos]) => {
       const videoToRemove = videos.find((video) => video.id === action.payload.videoId);
       const videosToSave = videos.filter((video) => {

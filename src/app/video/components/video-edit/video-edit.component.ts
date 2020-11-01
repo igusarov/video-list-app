@@ -3,10 +3,10 @@ import { Observable } from 'rxjs';
 import { Video } from '../../models';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
-import { getVideoById } from './video-edit.selectors';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GetData } from '../../actions/get-data.action';
 import { EditVideo } from '../../actions/video.action';
+import { getVideoById } from '../../selectors';
 
 @Component({
   selector: 'app-video-edit',

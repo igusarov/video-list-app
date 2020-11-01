@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../app.state';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import * as getDataActions from '../actions/get-data.action';
 import * as categoryActions from '../actions/category.action';
 import * as videoActions from '../actions/video.action';
 import * as authorActions from '../actions/author.action';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AuthorsService } from '../services/author.service';
 import { AuthorsResourceAuthor, AuthorsResourceResponse } from '../models/authors-resource';
 import { forkJoin } from 'rxjs';

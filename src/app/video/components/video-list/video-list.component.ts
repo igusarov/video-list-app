@@ -1,8 +1,8 @@
-import { AfterContentChecked, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { GetData } from '../../actions/get-data.action';
-import { getTableRows, TableRow } from './video-list.selectors';
+import { getTableRows } from './video-list.selectors';
 import { combineLatest, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
@@ -10,6 +10,18 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { DeleteVideo } from '../../actions/video.action';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
+import { TableRow } from '../../models';
+
+const filterTableRowsByText = ([rows, searchQuery]: [TableRow[], string]) => {
+  const text = searchQuery.trim().toLowerCase();
+  if (!text) {
+    return rows;
+  }
+  return rows.filter(({videoName, authorName, categoryName, highestQualityFormat, releaseDate}) => {
+    return (videoName + authorName + categoryName + highestQualityFormat + releaseDate)
+      .toLowerCase().includes(text);
+  });
+};
 
 @Component({
   selector: 'app-video-list',
@@ -41,18 +53,8 @@ export class VideoListComponent {
       this.searchInput.valueChanges.pipe(
         startWith(''),
       )
-    ).pipe(
-      map(([rows, searchQuery]: [TableRow[], string]) => {
-        const text = searchQuery.trim().toLowerCase();
-        if (!text) {
-          return rows;
-        }
-        return rows.filter(({videoName, authorName, categoryName, highestQualityFormat, releaseDate}) => {
-          return (videoName + authorName + categoryName + highestQualityFormat + releaseDate)
-            .toLowerCase().includes(text);
-        });
-      }),
-    );
+    ).pipe(map(filterTableRowsByText));
+
     this.store.dispatch(new GetData());
   }
 

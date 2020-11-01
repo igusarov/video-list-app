@@ -1,15 +1,7 @@
-import { Author, Category, Video } from '../../models';
+import { Author, Category, TableRow, Video } from '../../models';
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../../../app.state';
-
-export interface TableRow {
-  id: number;
-  videoName: string;
-  authorName: string;
-  categoryName: string;
-  highestQualityFormat: string;
-  releaseDate: string;
-}
+import { getAuthors, getCategories, getVideos } from '../../selectors';
 
 const getAuthorName = (authors: Author[], authorId: number): string => {
   const foundAuthor = authors.find((author) => author.id === authorId);
@@ -44,9 +36,9 @@ const getHighestQualityFormat = (video: Video): string => {
 };
 
 export const getTableRows = createSelector<AppState, Video[], Author[], Category[], TableRow[]>(
-  (state) => state.video.items,
-  (state) => state.author.items,
-  (state) => state.category.items,
+  getVideos,
+  getAuthors,
+  getCategories,
   (videos, authors, categories) => {
     return videos.map((video) => ({
       id: video.id,

@@ -15,6 +15,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { filter, takeUntil } from 'rxjs/operators';
+import { getAuthors, getCategories } from '../../selectors';
 
 @Component({
   selector: 'app-video-form',
@@ -37,8 +38,8 @@ export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
     private store: Store<AppState>,
     private formBuilder: FormBuilder,
   ) {
-    this.authors$ = this.store.select((state) => state.author.items);
-    this.categories$ = this.store.select((state) => state.category.items);
+    this.authors$ = this.store.select(getAuthors);
+    this.categories$ = this.store.select(getCategories);
   }
 
   ngOnInit() {

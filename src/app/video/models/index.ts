@@ -25,5 +25,14 @@ export interface Format {
   size: number;
 }
 
+export interface TableRow {
+  id: number;
+  videoName: string;
+  authorName: string;
+  categoryName: string;
+  highestQualityFormat: string;
+  releaseDate: string;
+}
+
 
 
