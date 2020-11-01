@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Video } from '../../models';
 import { AppState } from '../../../app.state';
@@ -11,7 +11,8 @@ import { EditVideo } from '../../actions/video.action';
 @Component({
   selector: 'app-video-edit',
   templateUrl: './video-edit.component.html',
-  styleUrls: ['./video-edit.component.scss']
+  styleUrls: ['./video-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoEditComponent {
 

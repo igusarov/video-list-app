@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { Author, Category, Video } from '../../models';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -9,7 +19,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-video-form',
   templateUrl: './video-form.component.html',
-  styleUrls: ['./video-form.component.scss']
+  styleUrls: ['./video-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output() submitForm: EventEmitter<Video> = new EventEmitter<Video>();

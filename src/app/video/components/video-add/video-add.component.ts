@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Video } from '../../models';
 import { Store } from '@ngrx/store';
@@ -11,7 +11,8 @@ import { filter, take } from 'rxjs/operators';
 @Component({
   selector: 'app-video-add',
   templateUrl: './video-add.component.html',
-  styleUrls: ['./video-add.component.scss']
+  styleUrls: ['./video-add.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoAddComponent {
   public isSubmitting$: Observable<boolean>;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { GetData } from '../../actions/get-data.action';
@@ -6,7 +6,7 @@ import { getTableRows, TableRow } from './video-list.selectors';
 import { combineLatest, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DeleteVideo } from '../../actions/video.action';
 import { FormControl } from '@angular/forms';
 import { map } from 'rxjs/operators';
@@ -14,7 +14,8 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-video-list',
   templateUrl: './video-list.component.html',
-  styleUrls: ['./video-list.component.scss']
+  styleUrls: ['./video-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoListComponent implements OnInit,  AfterViewInit {
   public searchInput: FormControl = new FormControl('');
